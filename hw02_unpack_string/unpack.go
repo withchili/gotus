@@ -2,34 +2,43 @@ package hw02unpackstring
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 )
 
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(s string) (string, error) {
-	result := ""
-	runeMultiplier := -1
-
-	runes := []rune(s)
-	for i := len(runes) - 1; i >= 0; i-- {
-		if runes[i] >= '0' && runes[i] <= '9' {
-			if runeMultiplier != -1 || i == 0 {
-				return "", ErrInvalidString
-			}
-			runeMultiplier = int(runes[i] - '0')
-			continue
-		}
-		if runeMultiplier == -1 {
-			result = string(runes[i]) + result
-			continue
-		}
-
-		newPart := strings.Repeat(string(runes[i]), runeMultiplier)
-		runeMultiplier = -1
-
-		result = newPart + result
+	if s == "" {
+		return "", nil
 	}
 
-	return result, nil
+	runes := []rune(s)
+
+	if runes[0] >= '0' && runes[0] <= '9' {
+		return "", ErrInvalidString
+	}
+
+	var sb strings.Builder
+
+	for i := 0; i < len(runes); i++ {
+		r := runes[i]
+		if i+1 < len(runes) && runes[i+1] >= '0' && runes[i+1] <= '9' {
+			n, err := strconv.Atoi(string(runes[i+1]))
+
+			if err != nil {
+				return "", ErrInvalidString
+			}
+
+			if n > 0 {
+				sb.WriteString(strings.Repeat(string(r), n))
+			}
+
+			i++
+		} else {
+			sb.WriteRune(r)
+		}
+	}
+
+	return sb.String(), nil
 }
