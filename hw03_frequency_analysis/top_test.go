@@ -43,6 +43,9 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+var text2 = "word word word differentword"
+var text3 = "word word1 word2 word3 word4 word5 word6 word7 word8 word9 word10"
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
@@ -77,6 +80,54 @@ func TestTop10(t *testing.T) {
 				"то",        // 4
 			}
 			require.Equal(t, expected, Top10(text))
+		}
+	})
+
+	t.Run("positive test with less than 10 different words", func(t *testing.T) {
+		if taskWithAsteriskIsCompleted {
+			expected := []string{
+				"word",          // 3
+				"differentword", // 1
+			}
+			require.Equal(t, expected, Top10(text2))
+		} else {
+			expected := []string{
+				"word",          // 3
+				"differentword", // 1
+			}
+			require.Equal(t, expected, Top10(text2))
+		}
+	})
+
+	t.Run("positive test with 10 different words with equal freq", func(t *testing.T) {
+		if taskWithAsteriskIsCompleted {
+			expected := []string{
+				"word",   // 1
+				"word1",  // 1
+				"word10", // 1
+				"word2",  // 1
+				"word3",  // 1
+				"word4",  // 1
+				"word5",  // 1
+				"word6",  // 1
+				"word7",  // 1
+				"word8",  // 1
+			}
+			require.Equal(t, expected, Top10(text3))
+		} else {
+			expected := []string{
+				"word",   // 1
+				"word1",  // 1
+				"word10", // 1
+				"word2",  // 1
+				"word3",  // 1
+				"word4",  // 1
+				"word5",  // 1
+				"word6",  // 1
+				"word7",  // 1
+				"word8",  // 1
+			}
+			require.Equal(t, expected, Top10(text3))
 		}
 	})
 }
